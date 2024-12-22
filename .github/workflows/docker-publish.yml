@@ -20,6 +20,8 @@ env:
   REGISTRY: ghcr.io
   # github.repository as <account>/<repo>
   IMAGE_NAME: ${{ github.repository }}
+  # Set version of image to be published
+  VERSION: v4.0.1
 
 
 
@@ -78,7 +80,7 @@ jobs:
         with:
           context: .
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:v4.0.0
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
@@ -86,8 +88,7 @@ jobs:
       - name: Update Kubernetes deployment with new image tag
         if: github.event_name != 'pull_request'
         run: |
-          NEW_TAG=${{ steps.meta.outputs.tags }}
-          sed -i "s|image: ghcr.io/${{ github.repository }}:.*|image: ghcr.io/${{ github.repository }}:${NEW_TAG}|g" k8s/harnessdemo-dep.yaml
+          sed -i "s|image: ghcr.io/${{ github.repository }}:.*|image: ghcr.io/${{ github.repository }}:${{ env.VERSION }}|g" k8s/harnessdemo-dep.yaml
 
       - name: Commit and push changes
         if: github.event_name != 'pull_request'
@@ -97,7 +98,7 @@ jobs:
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
           git add k8s/harnessdemo-dep.yaml
-          git commit -m "Update image tag to ${{ steps.meta.outputs.tags }}"
+          git commit -m "Update image tag to ${{ env.VERSION }}"
           git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} HEAD:main
 
       # Sign the resulting Docker image digest except on PRs.
@@ -109,7 +110,7 @@ jobs:
         if: ${{ github.event_name != 'pull_request' }}
         env:
           # https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions#using-an-intermediate-environment-variable
-          TAGS: ${{ steps.meta.outputs.tags }}
+          TAGS: ${{ env.VERSION }}
           DIGEST: ${{ steps.build-and-push.outputs.digest }}
         # This step uses the identity token to provision an ephemeral certificate
         # against the sigstore community Fulcio instance.
