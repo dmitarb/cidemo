@@ -21,7 +21,7 @@ env:
   # github.repository as <account>/<repo>
   IMAGE_NAME: ${{ github.repository }}
   # Set version of image to be published
-  VERSION: v4.0.1
+  VERSION: v4.0.2
 
 
 
