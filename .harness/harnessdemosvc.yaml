@@ -1,0 +1,23 @@
+service:
+  name: harnessdemo-svc
+  identifier: harnessdemosvc
+  serviceDefinition:
+    type: Kubernetes
+    spec:
+      manifests:
+        - manifest:
+            identifier: harnessdemomanifest
+            type: ReleaseRepo
+            spec:
+              store:
+                type: Github
+                spec:
+                  connectorRef: account.dmitarbgithub
+                  gitFetchType: Branch
+                  paths:
+                    - k8s/
+                  branch: main
+                  repoName: https://github.com/dmitarb/cidemo
+  gitOpsEnabled: true
+  orgIdentifier: default
+  projectIdentifier: default_project
