@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: harnessdemo
-        image: ghcr.io/dmitarb/cidemo:my-custom-tag
+        image: ghcr.io/dmitarb/cidemo:ghcr.io/dmitarb/cidemo:main
         ports:
         - containerPort: 80
 ---
