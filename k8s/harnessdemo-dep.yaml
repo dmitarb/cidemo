@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: harnessdemo-deployment
+  namespace: harnessdemo
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: harnessdemo
+  template:
+    metadata:
+      labels:
+        app: harnessdemo
+    spec:
+      containers:
+      - name: harnessdemo
+        image: ghcr.io/dmitarb/cidemo:main
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: harnessdemo-service
+  namespace: harnessdemo
+spec:
+  selector:
+    app: harnessdemo
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
