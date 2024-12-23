@@ -18,7 +18,7 @@ spec:
 <<<<<<< Updated upstream
         image: ghcr.io/dmitarb/cidemo:v4.0.3
 =======
-        image: ghcr.io/dmitarb/cidemo:v4.0.5
+        image: ghcr.io/dmitarb/cidemo:v4.0.3
 >>>>>>> Stashed changes
         ports:
         - containerPort: 80
